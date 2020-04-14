@@ -16,8 +16,9 @@ void setsensor() {
 void getvalues() {
   bme.takeForcedMeasurement();
   temperature = bme.readTemperature();
-  dewpoint = 0;
   humidity = bme.readHumidity();
+  dewpoint = temperature-0.36*(100.0-humidity);
+  
   pressure = bme.readPressure() / 100.0F;
   altitude = bme.readAltitude(SEALEVELPRESSURE_HPA);
   
