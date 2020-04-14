@@ -29,6 +29,7 @@ bool loadConfig() {
 
     const char* serverName = doc["serverName"];
     const char* accessToken = doc["accessToken"];
+    
 
     // Real world application would store these values in some variables for
     // later use.
@@ -41,6 +42,7 @@ bool loadConfig() {
 bool saveConfig() {
     StaticJsonDocument<200> doc;
     JsonObject root = doc.to<JsonObject>();
+    root["altitude"] = "220";
     root["serverName"] = "api.example.com";
     root["accessToken"] = "128du9as8du12eoue8da98h123ueh9h98";
     JsonObject wifi = root.createNestedObject("wifi");

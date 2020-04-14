@@ -12,14 +12,15 @@
 
 FS* filesystem = &LittleFS;
 
-#define SEALEVELPRESSURE_HPA (1013.25)
+#define ALTITUDE 220
 #define STASSID "ASM-modul"
 #define STAPSK  "dreebit001"
 #define HOSTNAME "ESP8266-"
 
 const char* ap_default_ssid = STASSID; ///< Default SSID.
 const char* ap_default_psk = STAPSK; ///< Default PSK.
-float temperature, dewpoint, humidity, pressure, altitude;
+const float cToKOffset = 273.15;
+float temperature, dewpoint, humidity, humidity_r, pressure, pressure_r;
 unsigned long startTime;
 int delayTime;
 
@@ -107,7 +108,9 @@ void setup(void) {
   
 
   bme.begin(0x76);   
-
+  delay(100);
+  setsensor();
+  
   
 //  server.on("/", []() {server.send(200, "text/plain", "Hi! I am ESP8266.");  });
   //list directory
@@ -138,9 +141,10 @@ void setup(void) {
   //get heap status, analog input value and all GPIO statuses in one json call
   server.on("/all", HTTP_GET, []() {
     String json = "{";
-    json += "\"tmp\":" + String(bme.readTemperature());
-    json += ", \"hum\":" + String(bme.readHumidity());
-    json += ", \"press\":" + String(bme.readPressure() / 100.0F);
+    json += "\"tmp\":" + String(temperature);
+    json += ", \"hum\":" + String(humidity_r);
+    json += ", \"press\":" + String(pressure);
+    json += ", \"dew\":" + String(dewpoint);
     json += "}";
     server.send(200, "text/json", json);
     json = String();
@@ -157,7 +161,21 @@ void loop(void) {
   
   
   if (millis() - startTime > 5000) {
-    
+    getvalues();
+      Serial.print(F("T: "));
+  Serial.print((String)temperature);
+  Serial.print(F(" *C\nDP: "));
+  Serial.print((String)dewpoint);
+  Serial.print(F(" *C\nH: "));
+  Serial.print((String)humidity_r);
+  Serial.print(F(" %\nAH: "));
+  Serial.print((String)humidity);
+  Serial.print(F(" g/m3\nRP: "));
+  Serial.print((String)pressure_r);
+  Serial.print(F(" hPa\nP: "));
+  Serial.print((String)pressure);
+  Serial.println(F(" hPa"));
+  Serial.flush();
     startTime = millis();
     }
   
