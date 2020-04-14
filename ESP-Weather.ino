@@ -10,26 +10,7 @@
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BME280.h>
 
-FS* filesystem = &LittleFS;
-
-#define ALTITUDE 220
-#define STASSID "ASM-modul"
-#define STAPSK  "dreebit001"
-#define HOSTNAME "ESP8266-"
-
-const char* ap_default_ssid = STASSID; ///< Default SSID.
-const char* ap_default_psk = STAPSK; ///< Default PSK.
-const float cToKOffset = 273.15;
-float temperature, dewpoint, humidity, humidity_r, pressure, pressure_r;
-unsigned long startTime;
-int delayTime;
-
-
-ESP8266WebServer server(80);
-//holds the current upload
-File fsUploadFile;
-Adafruit_BME280 bme;
-
+#include "defs.h"
 #include "filesystem.h"
 #include "webserver.h"
 #include "sensor.h"
@@ -37,8 +18,8 @@ Adafruit_BME280 bme;
 
 
 void setup(void) {
-  String station_ssid = "esp001";
-  String station_psk = "12345678";
+  String station_ssid = "MikroTik-220CF6";
+  String station_psk = "Sanifar123!";
   
   Serial.begin(9600);
   
